@@ -86,9 +86,6 @@
                             </table>
                             <div class="px-5 py-3 bg-white border-t flex flex-col xs:flex-row-reverse items-right xs:justify-end ">
                                 <div class="inline-flex mt-2 xs:mt-0 text-right">
-                                    <!--                                    <a href="/" class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">-->
-                                    <!--                                        More market-->
-                                    <!--                                    </a>-->
                                 </div>
                             </div>
                         </div>

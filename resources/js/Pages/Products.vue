@@ -6,7 +6,11 @@
         components:{
             AppLayout,
             Link
-        }
+        },
+        props: {
+            // filters: Object,
+            products: Array,
+        },
 
     }
 
@@ -48,7 +52,7 @@
                                     </th>
 
                                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
-                                        Price
+                                        Sales Price
                                     </th>
 
                                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
@@ -64,86 +68,93 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr class="font-medium">
+
+                                <tr class="font-medium" v-for="product in products" :key="product.id">
                                     <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 w-10 h-10">
                                                 <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
+                                                     :src="product.photo == null ? 'https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg':'/storage/'+ product.photo"
+                                                     :alt="product.name" />
                                             </div>
                                             <div class="ml-3">
                                                 <p class="text-gray-900 whitespace-no-wrap">
-                                                     Redmi 11s
+                                                    {{ product.name }}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Phones</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$239</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">3849382928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">8</td>
+                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">{{ product.category.name }}</td>
+                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">₦{{ product.sales_price}}</td>
+                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.barcode}}</td>
+                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.stock}}</td>
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.stock}}</td>-->
+                                    <!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ warehouse.created_at}}</td>-->
                                 </tr>
-                                <tr class="font-medium">
-                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    Samsung Ultra 22
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Phones</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$2390</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">1092842928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">8</td>
+
+                                <tr class="font-medium"  v-if="products.length === 0">
+                                    <td class="px-6 py-4 border-t mx-auto" colspan="3">No Product found.</td>
                                 </tr>
-                                <tr class="font-medium">
-                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    Milo
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Provisions</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$19</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">09848382928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">22</td>
-                                </tr>
-                                <tr class="font-medium">
-                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    Nike Sneakers
-                                                </p>
-                                            </div>
-                                        </div>
-                                        </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Men Shoes</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$69</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">49585942928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">13</td>
-                                </tr>
+<!--                                <tr class="font-medium">-->
+<!--                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">-->
+<!--                                        <div class="flex items-center">-->
+<!--                                            <div class="flex-shrink-0 w-10 h-10">-->
+<!--                                                <img class="w-full h-full rounded-lg"-->
+<!--                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"-->
+<!--                                                     alt="" />-->
+<!--                                            </div>-->
+<!--                                            <div class="ml-3">-->
+<!--                                                <p class="text-gray-900 whitespace-no-wrap">-->
+<!--                                                    Samsung Ultra 22-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Phones</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$2390</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">1092842928</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">8</td>-->
+<!--                                </tr>-->
+<!--                                <tr class="font-medium">-->
+<!--                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">-->
+<!--                                        <div class="flex items-center">-->
+<!--                                            <div class="flex-shrink-0 w-10 h-10">-->
+<!--                                                <img class="w-full h-full rounded-lg"-->
+<!--                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"-->
+<!--                                                     alt="" />-->
+<!--                                            </div>-->
+<!--                                            <div class="ml-3">-->
+<!--                                                <p class="text-gray-900 whitespace-no-wrap">-->
+<!--                                                    Milo-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Provisions</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$19</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">09848382928</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">22</td>-->
+<!--                                </tr>-->
+<!--                                <tr class="font-medium">-->
+<!--                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">-->
+<!--                                        <div class="flex items-center">-->
+<!--                                            <div class="flex-shrink-0 w-10 h-10">-->
+<!--                                                <img class="w-full h-full rounded-lg"-->
+<!--                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"-->
+<!--                                                     alt="" />-->
+<!--                                            </div>-->
+<!--                                            <div class="ml-3">-->
+<!--                                                <p class="text-gray-900 whitespace-no-wrap">-->
+<!--                                                    Nike Sneakers-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        </td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Men Shoes</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$69</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">49585942928</td>-->
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">13</td>-->
+<!--                                </tr>-->
                                 </tbody>
                             </table>
                             <div class="px-5 py-3 bg-white border-t flex flex-col xs:flex-row-reverse items-right xs:justify-end ">

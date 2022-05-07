@@ -8,6 +8,7 @@ import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+import FlashMessages from '@/Shared/FlashMessages'
 
 
 
@@ -31,6 +32,8 @@ const switchToTeam = (team) => {
 const logout = () => {
     Inertia.post(route('logout'));
 };
+
+
 </script>
 <style scoped>
     @import '../../css/style.css';
@@ -289,7 +292,9 @@ const logout = () => {
 
         <!-- Page Content -->
         <main class="main" id="main" style="background-color:#fafafa" @click="isSidebarVisible = false">
+
             <div class="main_container" >
+                <flash-messages />
                 <slot />
             </div>
         </main>

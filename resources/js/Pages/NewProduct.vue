@@ -1,27 +1,50 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout.vue';
     import { Link } from '@inertiajs/inertia-vue3'
-    import JetButton from '@/Jetstream/Button.vue';
-    import JetFormSection from '@/Jetstream/FormSection.vue';
-    import JetInput from '@/Jetstream/Input.vue';
-    import JetInputError from '@/Jetstream/InputError.vue';
-    import JetLabel from '@/Jetstream/Label.vue';
-    import JetActionMessage from '@/Jetstream/ActionMessage.vue';
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
+    import TextInput from '@/Shared/TextInput'
+    import LoadingButton from '@/Shared/Button'
+    import SelectInput from '@/Shared/SelectInput'
+    import FileInput from '@/Shared/FileInput'
+    import TextareaInput from '@/Shared/TextareaInput'
 
     export default {
         components:{
             AppLayout,
             Link,
-            JetInput,
-            JetInputError,
-            JetFormSection,
-            JetButton,
-            JetLabel,
-            JetActionMessage,
-            JetSecondaryButton
+            TextInput,
+            LoadingButton,
+            SelectInput,
+            FileInput,
+            TextareaInput
 
-        }
+        },
+        props: {
+            // filters: Object,
+            warehouses: Array,
+            categories: Array
+        },
+        remember: 'form',
+        data() {
+            return {
+                form: this.$inertia.form({
+                    warehouse_id: '',
+                    category_id: '',
+                    name: '',
+                    description: '',
+                    barcode: '',
+                    cost_price: '',
+                    sales_price: '',
+                    tax: '',
+                    weight: '',
+                    photo: null
+                }),
+            }
+        },
+        methods: {
+            store() {
+                this.form.post('/product/store')
+            },
+        },
 
     }
 
@@ -51,98 +74,76 @@
                                 </div>
                             </div>
                             <div class="mt-5 md:mt-0 md:col-span-2">
-                                <form @submit.prevent="submit">
+                                <form @submit.prevent="store">
                                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                                             <div class="grid grid-cols-3 gap-6">
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Category</label>
-                                                    <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                        <option>Electronics</option>
-                                                        <option>Men Shoes</option>
-                                                        <option>Phones</option>
-                                                        <option>Computing</option>
-                                                    </select>
+                                                    <select-input v-model="form.warehouse_id" :error="form.errors.warehouse_id" label="Warehouse">
+                                                        <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</option>
+                                                        <!--                                                        <option :value="false">No</option>-->
+                                                    </select-input>
                                                 </div>
                                             </div>
                                             <div class="grid grid-cols-3 gap-6">
                                                 <div class="col-span-3 sm:col-span-2">
-
-                                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Product Name</label>
-                                                    <input type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@flowbite.com">
-
+                                                    <select-input v-model="form.category_id" :error="form.errors.category_id" label="Category">
+                                                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+                                                        <!--                                                        <option :value="false">No</option>-->
+                                                    </select-input>
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-3 gap-6">
+                                                <div class="col-span-3 sm:col-span-2">
+                                                    <text-input v-model="form.name" :error="form.errors.name"  label="Product Name"/>
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <label for="name" class="block text-sm font-medium text-gray-700">
-                                                        Barcode
-                                                    </label>
-                                                    <div class="mt-1 flex flex-col rounded-md shadow-sm">
-                                                        <input id="barcode" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
-                                                                        focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="0495382430">
-                                                        <!--                                                        <JetInputError :message="`Who deeyy`" class="mt-2" />-->
-                                                    </div>
+                                                    <text-input v-model="form.barcode" :error="form.errors.barcode"  label="Barcode"/>
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
-
-                                                    <label for="cost_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cost price</label>
-                                                    <div class="flex">
-                                                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                                        ₦
-                                                        </span>
-                                                        <input type="text" id="cost_price" class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Bonnie Green">
-                                                    </div>
-
-                                                </div>
-                                                <div class="col-span-3 sm:col-span-2">
-
-                                                    <label for="sales_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sales price</label>
-                                                    <div class="flex">
-                                                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                                        ₦
-                                                        </span>
-                                                        <input type="text" id="sales_price" class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Bonnie Green">
-                                                    </div>
+                                                    <text-input v-model="form.cost_price" :error="form.errors.cost_price" :prefix="'₦'"  label="Cost Price" :placeholder="'0.00'"/>
+<!--                                                    <label for="cost_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cost price</label>-->
+<!--                                                    <div class="flex">-->
+<!--                                                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">-->
+<!--                                                        ₦-->
+<!--                                                        </span>-->
+<!--                                                        <input type="text" id="cost_price" class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Bonnie Green">-->
+<!--                                                    </div>-->
 
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
 
-                                                    <label for="tax" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Tax</label>
-                                                    <div class="flex">
-                                                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                                        ₦
-                                                        </span>
-                                                        <input type="text" id="tax" class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Bonnie Green">
-                                                    </div>
+                                                    <text-input v-model="form.sales_price" :error="form.errors.sales_price" :prefix="'₦'"  label="Sales Price" :placeholder="'0.00'"/>
 
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
 
-                                                    <label for="website-admin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Weight</label>
-                                                    <div class="flex">
-                                                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                                        kg
-                                                        </span>
-                                                        <input type="text" id="website-admin" class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Bonnie Green">
-                                                    </div>
+                                                    <text-input v-model="form.tax" :error="form.errors.tax" :prefix="'₦'"  label="Tax" :placeholder="'0.00'"/>
+
+                                                </div>
+                                                <div class="col-span-3 sm:col-span-2">
+                                                    <text-input v-model="form.weight" :error="form.errors.weight" :prefix="'kg'"  label="Weight" :placeholder="'0.05kg'"/>
 
                                                 </div>
 
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Description</label>
-                                                    <textarea id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="A blue bottle with a red cap."></textarea>
+                                                    <textarea-input v-model="form.description" :error="form.errors.description"   label="Description" />
+<!--                                                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Description</label>-->
+<!--                                                    <textarea id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="A blue bottle with a red cap."></textarea>-->
                                                 </div>
 
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300" for="user_avatar">Product image</label>
-                                                    <input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">
+                                                    <file-input v-model="form.photo" :error="form.errors.photo" class="" type="file" accept="image/*" label="Photo" />
+<!--                                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300" for="user_avatar">Product image</label>-->
+<!--                                                    <input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">-->
                                                 </div>
                                             </div>
 
                                         </div>
                                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            <loading-button  :loading="form.processing">
                                                 Save
-                                            </button>
+                                            </loading-button>
                                         </div>
                                     </div>
                                 </form>

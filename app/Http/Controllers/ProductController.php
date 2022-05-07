@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,7 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Products');
+        $products = Product::with('category')->get();
+
+        return Inertia::render('Products', ['products' => $products]);
     }
 
     /**
@@ -26,7 +30,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('NewProduct');
+        $categories = Category::all();
+        $warehouses = Warehouse::all();
+        return Inertia::render('NewProduct',['categories' => $categories, 'warehouses' => $warehouses]);
     }
 
     /**
@@ -37,7 +43,35 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        $request->validate([
+            'warehouse_id' => 'required|numeric',
+            'category_id' => 'required|numeric',
+            'name' => 'required|max:100',
+            'barcode' => 'required|numeric',
+            'cost_price' => 'required|numeric',
+            'sales_price' => 'required|numeric',
+            'tax' => 'required|numeric',
+            'description' => 'nullable',
+            'weight' => 'nullable|numeric',
+            'photo' => 'nullable'
+        ]);
+
+        Product::create([
+            'warehouse_id' => $request->warehouse_id,
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'barcode' => $request->barcode,
+            'cost_price' => $request->cost_price,
+            'sales_price' => $request->sales_price,
+            'tax' => $request->tax,
+            'description' => $request->description,
+            'weight' => $request->weight,
+            'photo' => $request->photo ? $request->photo->store('users', 'public') : null,
+        ]);
+
+        return redirect()->route('products')->with('success', 'Product added successfully');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
@@ -16,7 +17,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Categories');
+        $categories = Category::all();
+        $warehouses = Warehouse::all();
+        return Inertia::render('Categories',
+                                        ['categories' => $categories,
+                                         'warehouses' => $warehouses]);
     }
 
     /**
@@ -37,7 +42,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'warehouse_id' => 'required',
+            'name' => 'required|max:50',
+            'description' => 'nullable'
+        ]);
+
+        Category::create([
+            'warehouse_id' => $request->warehouse_id,
+            'name' => $request->name,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('categories')->with('success', 'Categories created successfully');
     }
 
     /**

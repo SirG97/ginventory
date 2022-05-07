@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Warehouse;
+use App\Models\Order;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
 
-class WarehouseController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $warehouses = Warehouse::all();
-        return Inertia::render('Warehouse', ['warehouses' => $warehouses]);
+        //
     }
 
     /**
@@ -27,7 +24,7 @@ class WarehouseController extends Controller
      */
     public function create()
     {
-
+        //
     }
 
     /**
@@ -38,26 +35,16 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|max:50',
-            'address' => 'nullable'
-        ]);
-
-        Warehouse::create([
-            'name' => $request->name,
-            'address' => $request->address
-        ]);
-
-        return redirect()->route('warehouse')->with('success', 'Warehouse Created successfully');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Warehouse $warehouse)
+    public function show(Order $order)
     {
         //
     }
@@ -65,10 +52,10 @@ class WarehouseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit(Warehouse $warehouse)
+    public function edit(Order $order)
     {
         //
     }
@@ -77,21 +64,21 @@ class WarehouseController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Warehouse $warehouse)
+    public function update(Request $request, Order $order)
     {
-
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Warehouse  $warehouse
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Warehouse $warehouse)
+    public function destroy(Order $order)
     {
         //
     }

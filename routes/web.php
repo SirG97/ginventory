@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
 
     Route::get('/warehouse', [WarehouseController::class, 'index'])->name('warehouse');
-    Route::get('/warehouse/create', [WarehouseController::class, 'create'])->name('warehouse.create');
+//    Route::post('/warehouse/create', [WarehouseController::class, 'create'])->name('warehouse.create');
     Route::post('/warehouse/store', [WarehouseController::class, 'store'])->name('warehouse.store');
 
     Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
@@ -60,6 +60,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::post('/purchases/store', [PurchaseController::class, 'index'])->name('purchases.store');
 
     Route::get('/sales', [SalesController::class, 'index'])->name('transactions');
+    Route::post('/sales', [SalesController::class, 'store'])->name('transactions.create');
+
+
 
 });
 

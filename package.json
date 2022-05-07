@@ -27,6 +27,10 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
-        "flowbite": "^1.4.2"
+        "flowbite": "^1.4.2",
+        "fuse.js": "^6.6.0",
+        "vue-fuse": "^4.1.1",
+        "vue-moment": "^4.1.0",
+        "vuex": "^4.0.2"
     }
 }

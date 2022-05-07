@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Product;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,7 +21,8 @@ class SalesController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Sales');
+        $products = Product::with('category')->get();
+        return Inertia::render('Sales', ['products' => $products]);
     }
 
     /**
@@ -32,12 +38,67 @@ class SalesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'payment_method' => 'required',
+            'cart' => 'required'
+        ]);
+
+        $cart = json_decode($request->cart);
+//    dd($cart[0]->warehouse_id);
+        try{
+
+            DB::transaction(function() use ($request, $cart){
+                // Create a new order instance and populate order with Name, phone, total,
+                $order = Order::create([
+                    'name' => $request->name,
+                    'warehouse_id'=> $cart[0]->warehouse_id,
+                    'user_id' => auth()->user()->id,
+                    'phone' => '09094940394',
+                    'address' => 'No 12 Awka Road, Onitsha',
+                    'total' => $request->total
+                ]);
+                // Run a forloop, create order details and decrement stock
+
+                for($i = 0; $i < count($cart); $i++){
+                    $detail = OrderDetail::create([
+                        'order_id' => $order->id,
+                        'warehouse_id' => $cart[$i]->warehouse_id,
+                        'product_id' => $cart[$i]->id,
+                        'quantity' => $cart[$i]->quantity,
+                        'unit_price' => $cart[$i]->sales_price,
+                        'amount' => $cart[$i]->subTotal,
+                        'discount' => 0,
+                    ]);
+
+                    // Update remaining stock
+                    $product = Product::where('id', $detail->product_id)->first();
+                    $product->stock = $product->stock - $cart[$i]->quantity;
+                    $product->save();
+                }
+
+                Transaction::create([
+                    'warehouse_id' => $cart[0]->warehouse_id,
+                    'order_id' => $order->id,
+                    'user_id' => auth()->user()->id,
+                    'paid_amount' => $order->total,
+                    'balance' => 0,
+                    'payment_method' => $request->payment_method,
+                    'txn_date' => Carbon::now(),
+                    'txn_amount' => $order->amount,
+                ]);
+            });
+
+        }catch(\Exception $e){
+            return back()->with('error', 'Order could not be created. Please try again');
+        }
+
+        return back()->with('success', 'Order created successfully');
     }
 
     /**
@@ -65,7 +126,7 @@ class SalesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */

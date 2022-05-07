@@ -21,7 +21,6 @@ class CreateProductsTable extends Migration
             $table->integer('cost_price')->default(0);
             $table->integer('sales_price')->default(0);
             $table->integer('tax')->default(0);
-            $table->integer('qty')->default(1);
             $table->integer('weight')->default(1);
             $table->timestamps();
         });
