@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,13 @@ class Warehouse extends Model
       'address'
     ];
 
-//    public function setCreatedAtAttribute( $date ) {
-//       return Carbon::createFromFormat('Y-m-d H:i:s', $date);
-//    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Order by name DESC
+        static::addGlobalScope('warehouse', function (Builder $builder) {
+            $builder->orderBy('id', 'desc');
+        });
+    }
 }

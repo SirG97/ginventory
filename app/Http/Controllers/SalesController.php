@@ -59,9 +59,14 @@ class SalesController extends Controller
                     'name' => $request->name,
                     'warehouse_id'=> $cart[0]->warehouse_id,
                     'user_id' => auth()->user()->id,
-                    'phone' => '09094940394',
+                    'phone' => $request->phone,
                     'address' => 'No 12 Awka Road, Onitsha',
-                    'total' => $request->total
+                    'total' => $request->total,
+                    'paid_amount' => $request->total,
+                    'balance' => 0,
+                    'payment_method' => $request->payment_method,
+                    'txn_date' => Carbon::now(),
+                    'txn_amount' => $request->total,
                 ]);
                 // Run a forloop, create order details and decrement stock
 
@@ -71,6 +76,7 @@ class SalesController extends Controller
                         'warehouse_id' => $cart[$i]->warehouse_id,
                         'product_id' => $cart[$i]->id,
                         'quantity' => $cart[$i]->quantity,
+                        'cost_price' => $cart[$i]->cost_price,
                         'unit_price' => $cart[$i]->sales_price,
                         'amount' => $cart[$i]->subTotal,
                         'discount' => 0,
@@ -82,23 +88,23 @@ class SalesController extends Controller
                     $product->save();
                 }
 
-                Transaction::create([
-                    'warehouse_id' => $cart[0]->warehouse_id,
-                    'order_id' => $order->id,
-                    'user_id' => auth()->user()->id,
-                    'paid_amount' => $order->total,
-                    'balance' => 0,
-                    'payment_method' => $request->payment_method,
-                    'txn_date' => Carbon::now(),
-                    'txn_amount' => $order->amount,
-                ]);
+//                Transaction::create([
+//                    'warehouse_id' => $cart[0]->warehouse_id,
+//                    'order_id' => $order->id,
+//                    'user_id' => auth()->user()->id,
+//                    'paid_amount' => $order->total,
+//                    'balance' => 0,
+//                    'payment_method' => $request->payment_method,
+//                    'txn_date' => Carbon::now(),
+//                    'txn_amount' => $order->amount,
+//                ]);
             });
 
         }catch(\Exception $e){
             return back()->with('error', 'Order could not be created. Please try again');
         }
 
-        return back()->with('success', 'Order created successfully');
+        return back()->with(['success' => 'Order created successfully'], ['receipt' => $cart]);
     }
 
     /**

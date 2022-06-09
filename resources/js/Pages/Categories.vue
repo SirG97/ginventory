@@ -27,7 +27,7 @@
                                 <form @submit.prevent="store">
                                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                                            <div class="grid grid-cols-3 gap-6">
+                                            <div v-if="$page.props.user.roles.includes('admin')" class="grid grid-cols-3 gap-6">
                                                 <div class="col-span-3 sm:col-span-2">
                                                     <select-input v-model="form.warehouse_id" :error="form.errors.warehouse_id" label="Warehouse">
                                                         <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</option>
@@ -141,7 +141,8 @@
         props: {
             // filters: Object,
             warehouses: Array,
-            categories: Array
+            categories: Array,
+            user: Object
         },
         remember: 'form',
         data() {
@@ -156,6 +157,9 @@
         },
         methods: {
             store() {
+                if(this.form.warehouse_id == ''){
+                    this.form.warehouse_id = this.user.warehouse_id
+                }
                 this.form.post('/categories/store')
             },
         },

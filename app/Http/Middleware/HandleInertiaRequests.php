@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -36,7 +38,23 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $permissions = [];
+        $roles = [];
+        $warehouses = [];
+        $userWarehouse = [];
+        if(Auth::check()){
+            $user = Auth::user();
+            $userWarehouse = Warehouse::where('id', '=', $user->warehouse_id)->first();
+            $warehouses = Warehouse::all();
+            $permissions = $user->getAllPermissions()->pluck('name');
+            $roles = $user->roles()->pluck('name');
+        }
+
         return array_merge(parent::share($request), [
+            'user.permissions' => $permissions,
+            'user.roles' => $roles,
+            'warehouses' => $warehouses,
+            'userWarehouse' => $userWarehouse,
             'flash' => function () use ($request) {
                 return [
                     'success' => $request->session()->get('success'),

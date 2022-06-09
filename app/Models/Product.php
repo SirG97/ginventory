@@ -29,8 +29,8 @@ class Product extends Model
         parent::boot();
 
         // Order by name ASC
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('id', 'desc');
+        static::addGlobalScope('warehouse', function (Builder $builder) {
+            $builder->where('warehouse_id', auth()->user()->warehouse_id)->orderBy('id', 'desc');
         });
     }
 

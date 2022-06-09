@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Purchase;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -49,10 +50,10 @@ class ProductController extends Controller
             'warehouse_id' => 'required|numeric',
             'category_id' => 'required|numeric',
             'name' => 'required|max:100',
-            'barcode' => 'required|numeric',
             'cost_price' => 'required|numeric',
             'sales_price' => 'required|numeric',
             'tax' => 'required|numeric',
+            'quantity' => 'required|numeric',
             'description' => 'nullable',
             'weight' => 'nullable|numeric',
             'photo' => 'nullable'
@@ -62,7 +63,8 @@ class ProductController extends Controller
             'warehouse_id' => $request->warehouse_id,
             'category_id' => $request->category_id,
             'name' => $request->name,
-            'barcode' => $request->barcode,
+            'stock' => $request->quantity,
+//            'barcode' => $request->barcode,
             'cost_price' => $request->cost_price,
             'sales_price' => $request->sales_price,
             'tax' => $request->tax,
@@ -84,6 +86,7 @@ class ProductController extends Controller
     {
         //
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -117,5 +120,51 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function onShelf(){
+        $products = Product::where('stock', '>=', 5)->with('category')->get();
+
+        return Inertia::render('Inventory/OnShelf', ['products' => $products]);
+    }
+
+    public function lowStock(){
+        $products = Product::where([['stock', '<', 5], ['stock', '>', 0]])->with('category')->get();
+
+        return Inertia::render('Inventory/LowStock', ['products' => $products]);
+    }
+
+    public function outOfStock(){
+        $products = Product::where('stock', '<=', 0)->with('category')->get();
+
+        return Inertia::render('Inventory/OutOfStock', ['products' => $products]);
+    }
+
+    public function stock(){
+        $products = Product::all();
+
+        return Inertia::render('Inventory/AddStock', ['products' => $products]);
+    }
+
+    public function storeStock(Request $request){
+
+        $request->validate([
+            'warehouse_id' => 'required|numeric',
+            'product_id' => 'required|numeric',
+            'quantity' => 'required|numeric',
+        ]);
+        $product = Product::findOrFail($request->product_id);
+        Purchase::create([
+            'warehouse_id' => auth()->user()->warehouse_id,
+            'user_id' => auth()->user()->id,
+            'product_id' => $request->product_id,
+            'qty_before' => $product->stock,
+            'qty' => $request->quantity,
+            'qty_after' => $product->stock + $request->quantity,
+        ]);
+        $product->stock += $request->quantity;
+        $product->save();
+
+        return redirect()->route('products')->with('success', 'Product stocked successfully');
     }
 }

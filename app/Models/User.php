@@ -9,6 +9,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class User extends Authenticatable
 {
@@ -17,6 +20,9 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasRoles;
+
+//    protected $guard_name = '*';
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +33,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'warehouse_id',
+        'role',
+        'role_id'
     ];
 
     /**
@@ -58,4 +67,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function warehouse(){
+        return $this->belongsTo(Warehouse::class);
+    }
+
 }

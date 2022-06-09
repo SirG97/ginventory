@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -94,5 +96,12 @@ class WarehouseController extends Controller
     public function destroy(Warehouse $warehouse)
     {
         //
+    }
+
+    public function change(Request $request){
+        $user =  User::where('id', '=', Auth::user()->id)->first();
+        $user->warehouse_id = $request->id;
+        $user->save();
+        return back()->with('success', 'Switched warehouse successfully');
     }
 }

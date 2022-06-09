@@ -1,12 +1,35 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout.vue';
     import { Link } from '@inertiajs/inertia-vue3'
+    import moment from 'moment';
 
     export default {
         components:{
             AppLayout,
             Link
-        }
+        },
+        props: {
+            // filters: Object,
+            purchases: Array,
+        },
+        methods: {
+            date_time(value) {
+                return moment(value).format('DD-MM-YYYY');
+            },
+            format_currency(value){
+                let formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'NGN',
+                    currencyDisplay: 'code'
+
+                    // These options are needed to round to whole numbers if that's what you want.
+                    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+                    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+                });
+                return formatter.format(value).replace('NGN', '').trim()
+            }
+        },
+
 
     }
 
@@ -14,11 +37,11 @@
 <template>
     <AppLayout title="Products">
         <template #icon>
-            <i class="fa-solid fa-basket-shopping"></i>
+            <i class="fa-solid fa-cart-shopping"></i>
         </template>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight inline">
-                Purchases
+                Purchase History
             </h2>
         </template>
 
@@ -29,120 +52,43 @@
                         <div class="col-span-12 sm:col-span-12 rounded-lg shadow-md inline-block min-w-full overflow-hidden">
                             <div class="px-5 py-3 bg-white border-t rounded-t-lg flex flex-col xs:flex-row-reverse items-right xs:justify-end ">
                                 <div class="inline-flex justify-between mt-2 xs:mt-0 text-right rounded-t-lg">
-                                    <h3 class="font-bold">Purchases</h3>
-                                    <Link href="/product/create" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium
-                                                rounded-md text-white bg-indigo-600 hover:bg-indigo-700
-                                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        Add new
-                                    </Link>
+                                    <h3 class="font-bold">Purchase History</h3>
                                 </div>
                             </div>
                             <table class="table-auto min-w-full leading-normal">
                                 <thead>
                                 <tr>
                                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left  font-semibold text-gray-600  tracking-wider">
-                                        Name
+                                        Product name
                                     </th>
                                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
-                                        Category
-                                    </th>
-
-                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
-                                        Price
-                                    </th>
-
-                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
-                                        Code
-                                    </th>
-
-                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider whitespace-nowrap">
                                         In stock
                                     </th>
-                                    <!--                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">-->
-                                    <!--                                        Action-->
-                                    <!--                                    </th>-->
+                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
+                                        Received
+                                    </th>
+                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
+                                        Total
+                                    </th>
+
+                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
+                                        Date
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr class="font-medium">
-                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    Redmi 11s
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Phones</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$239</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">3849382928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">8</td>
+
+                                <tr class="font-medium" v-for="purchase in purchases" :key="purchase.id">
+                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">{{ purchase.product.name }}</td>
+                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ purchase.qty_before}}</td>
+                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ purchase.qty}}</td>
+                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ purchase.qty_after}}</td>
+                                    <!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.stock}}</td>-->
+                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ date_time(purchase.created_at)}}</td>
                                 </tr>
-                                <tr class="font-medium">
-                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    Samsung Ultra 22
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Phones</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$2390</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">1092842928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">8</td>
-                                </tr>
-                                <tr class="font-medium">
-                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    Milo
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Provisions</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$19</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">09848382928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">22</td>
-                                </tr>
-                                <tr class="font-medium">
-                                    <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-lg"
-                                                     src="https://c8.alamy.com/comp/2BDX8K1/cartoon-girl-holding-something-in-her-hands-placeholder-2BDX8K1.jpg"
-                                                     alt="" />
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    Nike Sneakers
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">Men Shoes</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">$69</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">49585942928</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">13</td>
+
+                                <tr class="font-medium"  v-if="purchases.length === 0">
+                                    <td class="px-6 py-4 border-t mx-auto" colspan="3">No Product found.</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -165,4 +111,3 @@
 <style scoped>
 
 </style>
-

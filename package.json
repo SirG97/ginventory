@@ -27,8 +27,11 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
+        "@casl/ability": "^5.4.3",
+        "@casl/vue": "^2.1.2",
         "flowbite": "^1.4.2",
         "fuse.js": "^6.6.0",
+        "moment": "^2.29.3",
         "vue-fuse": "^4.1.1",
         "vue-moment": "^4.1.0",
         "vuex": "^4.0.2"

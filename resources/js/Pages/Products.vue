@@ -10,6 +10,7 @@
         props: {
             // filters: Object,
             products: Array,
+
         },
 
     }
@@ -55,9 +56,9 @@
                                         Sales Price
                                     </th>
 
-                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">
-                                        Code
-                                    </th>
+<!--                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider">-->
+<!--                                        Code-->
+<!--                                    </th>-->
 
                                     <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left font-semibold text-gray-600  tracking-wider whitespace-nowrap">
                                         In stock
@@ -86,7 +87,7 @@
                                     </td>
                                     <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">{{ product.category.name }}</td>
                                     <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">₦{{ product.sales_price}}</td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.barcode}}</td>
+<!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.barcode}}</td>-->
                                     <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.stock}}</td>
 <!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.stock}}</td>-->
                                     <!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ warehouse.created_at}}</td>-->

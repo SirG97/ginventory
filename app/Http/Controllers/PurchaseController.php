@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,7 +16,9 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Purchases');
+        $purchases = Purchase::with('product')->get();
+//        dd($purchases);
+        return Inertia::render('Purchases', compact('purchases'));
     }
 
     /**

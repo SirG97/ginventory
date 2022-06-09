@@ -4,10 +4,7 @@
     import { Link } from '@inertiajs/inertia-vue3'
     import TextInput from "../Shared/TextInput";
     import LoadingButton from '../Shared/Button'
-    import { reactive } from 'vue'
-    import { Inertia } from '@inertiajs/inertia'
-    import axios from 'axios'
-    import {toRaw} from "@vue/reactivity";
+    import { useForm } from '@inertiajs/inertia-vue3'
 
     export default {
         // mounted() {
@@ -28,7 +25,11 @@
             return{
                 cart: [],
                 grandTotal: 0,
-
+                print_cart: [],
+                print_name: '',
+                print_phone: '',
+                print_total: 0,
+                print_payment_method: '',
                 form: this.$inertia.form({
                     cart: '',
                     total: 0,
@@ -44,7 +45,6 @@
                     itemInCart.quantity += 1;
                     itemInCart.subTotal = itemInCart.sales_price * itemInCart.quantity;
                     this.calculateTotal(this.cart)
-
                     return;
                 }else {
                     product.quantity = 1;
@@ -76,11 +76,21 @@
                 this.cart = [];
             },
             processOrder(){
-
                 this.form['cart'] = JSON.stringify(this.cart);
                 this.form['total'] = this.grandTotal;
-                this.form.post('/sales')
-
+                this.form.post('/sales', {
+                    onSuccess: () => {
+                        this.print_total = this.grandTotal;
+                        this.print_cart = this.cart;
+                        this.print_name = this.form.name;
+                        this.print_phone = this.form.phone;
+                        this.print_payment_method = this.form.payment_method;
+                        window.print();
+                        this.grandTotal = 0;
+                        this.emptyCart();
+                    },
+                })
+                    //
             }
         },
 
@@ -91,19 +101,18 @@
 <template>
     <AppLayout title="Products">
         <template #icon>
-            <i class="fa-solid fa-timeline"></i>
+            <i class="fa-solid fa-timeline print:hidden"></i>
         </template>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight inline">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight inline print:hidden">
                 Sales
             </h2>
         </template>
 
-        <div class="py-4">
+        <div class="py-4 print:hidden">
             <div class="max-w-7xl mx-auto sm:px-1 lg:px-1">
                 <div class="my-2">
                     <div class="mb-4">
-
                         <search-products @addItem="addItemToCart($event)" :products="products" />
                         <div class="md:grid md:grid-cols-12 md:gap-2">
 
@@ -175,7 +184,7 @@
                                                 <input type="number" id="quantity" v-model.number="item.quantity" @input="updateItemQuantity(index, item.quantity)" @change="updateItemQuantity(index, item.quantity)" class="bg-gray-50 border border-gray-300 text-gray-900
                                                  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                                                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-                                                 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="1" required></td>
+                                                 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="1" :max="item.stock" required></td>
                                             <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">₦{{item.sales_price * item.quantity }}</td>
                                             <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ item.stock }}</td>
                                             <td class="px-5 py-3 border-b border-gray-200 bg-white text-md text-red-500">
@@ -211,6 +220,9 @@
                                     <div class="p-3">
                                         <text-input v-model="form.name" :error="form.errors.name" required label="Customer Name"/>
                                     </div>
+                                    <div class="p-3">
+                                        <text-input v-model="form.phone" :error="form.errors.phone" required label="Phone"/>
+                                    </div>
                                     <div class="flex flex-col mt-1 ml-3 mb-3">
                                         <div class="">
                                             <div class="font-medium text-md text-gray-500">Payment Method</div>
@@ -237,14 +249,170 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
+        <div id="invoice-POS" class="hidden print:block">
+
+            <div id="top">
+                <div class="logo"></div>
+                <div class="info">
+                    <h2>Divine Global Enteprise</h2>
+                </div><!--End Info-->
+            </div><!--End InvoiceTop-->
+
+            <div id="mid">
+                <div class="info">
+                    <h5>Customer Info</h5>
+                    <p>
+                        Name   : {{ this.print_name}}<br>
+                        Phone   : {{ this.print_phone}}<br>
+                        Payment method   : {{ this.print_payment_method}}<br>
+                    </p>
+                </div>
+            </div><!--End Invoice Mid-->
+
+            <div id="bot">
+
+                <div id="table">
+                    <table>
+                        <tr  class="tabletitle">
+                            <td class="item"><h2>Item</h2></td>
+                            <td class="Hours"><h2>Price</h2></td>
+                            <td class="Hours"><h2>Qty</h2></td>
+                            <td class="Rate"><h2>Sub Total</h2></td>
+                        </tr>
+
+
+                        <tr v-for="(item, index) in cart" class="service">
+                            <td class="tableitem"><p class="itemtext">{{ item.name }}</p></td>
+                            <td class="tableitem"><p class="itemtext">₦{{ item.sales_price}}</p></td>
+                            <td class="tableitem"><p class="itemtext">{{ item.quantity}}</p></td>
+                            <td class="tableitem"><p class="itemtext">₦{{item.sales_price * item.quantity }}</p></td>
+                        </tr>
+
+
+<!--                        <tr class="tabletitle">-->
+<!--                            <td></td>-->
+<!--                            <td class="Rate"><h2>tax</h2></td>-->
+<!--                            <td class="payment"><h2>$419.25</h2></td>-->
+<!--                        </tr>-->
+
+                        <tr class="tabletitle">
+                            <td></td>
+                            <td></td>
+                            <td class="Rate"><h2>Total</h2></td>
+                            <td class="payment"><h2>₦{{ this.print_total}}</h2></td>
+                        </tr>
+
+                    </table>
+                </div><!--End Table-->
+
+                <div id="legalcopy">
+                    <p class="legal"><strong>Thank you for doing business with us!</strong> 
+                    </p>
+                </div>
+
+            </div><!--End InvoiceBot-->
+        </div><!--End Invoice-->
     </AppLayout>
 </template>
 
 
 <style scoped>
-
+    #invoice-POS {
+        border: 1px dotted gray;
+        padding: 15px;
+        width: 50mm;
+        background: #FFF;
+    }
+    #invoice-POS ::selection {
+        background: #f31544;
+        color: #FFF;
+    }
+    #invoice-POS ::moz-selection {
+        background: #f31544;
+        color: #FFF;
+    }
+    #invoice-POS h1 {
+        font-size: 1.5em;
+        color: #222;
+    }
+    #invoice-POS h2 {
+        font-size: 0.9em;
+    }
+    #invoice-POS h3 {
+        font-size: 1.2em;
+        font-weight: 300;
+        line-height: 2em;
+    }
+    #invoice-POS p {
+        font-size: 0.7em;
+        color: #666;
+        line-height: 1.2em;
+    }
+    #invoice-POS #top, #invoice-POS #mid, #invoice-POS #bot {
+        /* Targets all id with 'col-' */
+        border-bottom: 1px solid #EEE;
+    }
+    #invoice-POS #top {
+        min-height: 100px;
+    }
+    #invoice-POS #mid {
+        min-height: 80px;
+    }
+    #invoice-POS #bot {
+        min-height: 50px;
+    }
+    #invoice-POS #top .logo {
+        height: 60px;
+        width: 60px;
+        background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
+        background-size: 60px 60px;
+        text-align: center;
+        margin: auto;
+    }
+    #invoice-POS .clientlogo {
+        float: left;
+        height: 60px;
+        width: 60px;
+        background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+        background-size: 60px 60px;
+        border-radius: 50px;
+    }
+    #invoice-POS .info {
+        display: block;
+        margin-left: 0;
+    }
+    #invoice-POS .title {
+        float: right;
+    }
+    #invoice-POS .title p {
+        text-align: right;
+    }
+    #invoice-POS table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    #invoice-POS .tabletitle {
+        font-size: 0.5em;
+        background: #EEE;
+    }
+    #invoice-POS .service {
+        border-bottom: 1px solid #EEE;
+    }
+    #invoice-POS .item {
+        width: 24mm;
+    }
+    #invoice-POS .itemtext {
+        font-size: 0.5em;
+    }
+    #invoice-POS #legalcopy {
+        margin-top: 5mm;
+    }
+    .info h5{
+        font-size: 14px;
+    }
 </style>
 
 

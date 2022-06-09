@@ -21,7 +21,8 @@
         props: {
             // filters: Object,
             warehouses: Array,
-            categories: Array
+            categories: Array,
+            user: Object
         },
         remember: 'form',
         data() {
@@ -31,7 +32,7 @@
                     category_id: '',
                     name: '',
                     description: '',
-                    barcode: '',
+                    quantity: '',
                     cost_price: '',
                     sales_price: '',
                     tax: '',
@@ -42,6 +43,9 @@
         },
         methods: {
             store() {
+                if(this.form.warehouse_id == ''){
+                    this.form.warehouse_id = this.user.warehouse_id
+                }
                 this.form.post('/product/store')
             },
         },
@@ -77,7 +81,7 @@
                                 <form @submit.prevent="store">
                                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                                            <div class="grid grid-cols-3 gap-6">
+                                            <div v-if="$page.props.user.roles.includes('admin')" class="grid grid-cols-3 gap-6">
                                                 <div class="col-span-3 sm:col-span-2">
                                                     <select-input v-model="form.warehouse_id" :error="form.errors.warehouse_id" label="Warehouse">
                                                         <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</option>
@@ -98,10 +102,10 @@
                                                     <text-input v-model="form.name" :error="form.errors.name"  label="Product Name"/>
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <text-input v-model="form.barcode" :error="form.errors.barcode"  label="Barcode"/>
+                                                    <text-input v-model.number="form.quantity" :error="form.errors.quantity"  label="Initial Stock"/>
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <text-input v-model="form.cost_price" :error="form.errors.cost_price" :prefix="'₦'"  label="Cost Price" :placeholder="'0.00'"/>
+                                                    <text-input v-model.number="form.cost_price" :error="form.errors.cost_price" :prefix="'₦'"  label="Cost Price" :placeholder="'0.00'"/>
 <!--                                                    <label for="cost_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cost price</label>-->
 <!--                                                    <div class="flex">-->
 <!--                                                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">-->
@@ -113,16 +117,16 @@
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
 
-                                                    <text-input v-model="form.sales_price" :error="form.errors.sales_price" :prefix="'₦'"  label="Sales Price" :placeholder="'0.00'"/>
+                                                    <text-input v-model.number="form.sales_price" :error="form.errors.sales_price" :prefix="'₦'"  label="Sales Price" :placeholder="'0.00'"/>
 
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
 
-                                                    <text-input v-model="form.tax" :error="form.errors.tax" :prefix="'₦'"  label="Tax" :placeholder="'0.00'"/>
+                                                    <text-input v-model.number="form.tax" :error="form.errors.tax" :prefix="'₦'"  label="Tax" :placeholder="'0.00'"/>
 
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <text-input v-model="form.weight" :error="form.errors.weight" :prefix="'kg'"  label="Weight" :placeholder="'0.05kg'"/>
+                                                    <text-input v-model.number="form.weight" :error="form.errors.weight" :prefix="'kg'"  label="Weight" :placeholder="'0.05kg'"/>
 
                                                 </div>
 
