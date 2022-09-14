@@ -16,8 +16,15 @@ class WarehouseSeeder extends Seeder
     {
         Warehouse::create([
             'name' => 'Main Warehouse',
-            'address' => ''
-        ]);
+            'address' => 'Okwei Street'
+        ],[
+            'name' => 'Woman Sense Warehouse',
+            'address' => 'Frontline Main Market'
+        ],[
+            'name' => 'Jasmine Plaza',
+            'address' => 'Opposite Mosque Onitsha Main Market'
+            ]
+            );
 
     }
 }
