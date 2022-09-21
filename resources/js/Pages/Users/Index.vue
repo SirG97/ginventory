@@ -80,7 +80,7 @@
                                         <span v-if="user.roles[0].name == 'staff'" class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">{{ user.roles[0].name}}</span>
                                     </td>
                                     <td class="px-5 py-3 border-b text-left">
-                                        <a href="#" class="mr-1 font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                        <a :href="'/users/' + user.id + '/edit'" class="mr-1 font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                         <a href="#" class="ml-1 font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
                                     </td>
                                 </tr>

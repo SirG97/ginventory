@@ -86,7 +86,7 @@
                                                     <text-input v-model="form.name" :error="form.errors.name"  label="Name"/>
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
-                                                    <text-input v-model="form.email" :error="form.errors.email"  label="Email"/>
+                                                    <text-input v-model="form.email" type="email" :error="form.errors.email"  label="Email"/>
                                                 </div>
                                                 <div class="col-span-3 sm:col-span-2">
                                                     <text-input v-model="form.password" :error="form.errors.password"  label="Password" :placeholder="'********'"/>

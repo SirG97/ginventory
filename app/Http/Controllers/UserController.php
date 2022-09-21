@@ -29,6 +29,7 @@ class UserController extends Controller
         }
         $users = User::whereHas('roles')->with(['warehouse', 'roles'])->get();
 
+
         return Inertia::render('Users/Index', compact('users'));
     }
 
@@ -109,11 +110,17 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::where('email', $request->email)->first();
-        $user->update(['name' => $request->name]);
+
+        $user = User::where('id', $id)->first();
+        if($request->password !== null){
+            $user->update(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password)]);
+        }else{
+            $user->update(['name' => $request->name, 'email' => $request->email]);
+        }
+
         $user->syncRoles($request->input('roles'));
 
-        return back()->with('success', 'User updated succssfully.');
+        return redirect()->route('users')->with('success','User details updated successfully');
     }
 
     /**
