@@ -52,7 +52,7 @@
         </template>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight inline">
-                New User
+                 User
             </h2>
         </template>
 

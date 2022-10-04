@@ -21,7 +21,7 @@ class ProductController extends Controller
     {
         $products = Product::with('category')->get();
 
-        return Inertia::render('Products', ['products' => $products]);
+        return Inertia::render('Products/Index', ['products' => $products]);
     }
 
     /**
@@ -33,7 +33,7 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         $warehouses = Warehouse::all();
-        return Inertia::render('NewProduct',['categories' => $categories, 'warehouses' => $warehouses]);
+        return Inertia::render('Products/Create',['categories' => $categories, 'warehouses' => $warehouses]);
     }
 
     /**
@@ -92,11 +92,12 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+        return Inertia::render('Products/Edit',['product' => $product, 'categories' => $categories]);
     }
 
     /**
@@ -108,7 +109,21 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $request->validate([
+            'warehouse_id' => 'required|numeric',
+            'category_id' => 'required|numeric',
+            'name' => 'required|max:100',
+            'cost_price' => 'required|numeric',
+            'sales_price' => 'required|numeric',
+            'tax' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'description' => 'nullable',
+            'weight' => 'nullable|numeric',
+            'photo' => 'nullable'
+        ]);
+       $product->update($request->only('warehouse_id', 'category_id', 'name', 'cost_price', 'sales_price', 'tax', 'quantity', 'weight', 'description'));
+
+        return redirect()->route('products')->with('success', 'Product edited successfully');
     }
 
     /**

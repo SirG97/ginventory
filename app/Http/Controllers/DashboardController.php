@@ -18,6 +18,7 @@ class DashboardController extends Controller
         $outOfStock = Product::where('stock', '<=', 0)->count();
         $orders = Order::with('details')->get();
         $purchases = Purchase::with('product')->get();
+
         return Inertia::render('Dashboard', compact('totalProducts', 'lowStock', 'outOfStock',
                                                                         'onShelf', 'purchases', 'orders'));
     }

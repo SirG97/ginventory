@@ -48,6 +48,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/products', [ProductController::class, 'index'])->name('products');
     Route::get('/product/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/product/store', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/show', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/product/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/product/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::get('/products/on-shelf', [ProductController::class, 'onShelf'])->name('products.shelf');
     Route::get('/products/low-stock', [ProductController::class, 'lowStock'])->name('products.low');
     Route::get('/products/out-of-stock', [ProductController::class, 'outOfStock'])->name('products.out');
