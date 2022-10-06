@@ -29,15 +29,15 @@
         data() {
             return {
                 form: this.$inertia.form({
-                    warehouse_id: this.product.warehouse_id,
+                    // warehouse_id: this.product.warehouse_id,
                     category_id: this.product.category_id,
                     name: this.product.name,
                     description: this.product.description,
-                    quantity: this.product.stock,
+                    // quantity: this.product.stock,
                     cost_price: this.product.cost_price,
                     sales_price: this.product.sales_price,
-                    tax: this.product.tax,
-                    weight: this.product.weight,
+                    // tax: this.product.tax,
+                    // weight: this.product.weight,
                 }),
             }
         },
@@ -78,14 +78,14 @@
                                 <form @submit.prevent="store">
                                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                                            <div v-if="$page.props.user.roles.includes('admin')" class="grid grid-cols-3 gap-6">
-                                                <div class="col-span-3 sm:col-span-2">
-                                                    <select-input v-model="form.warehouse_id" :error="form.errors.warehouse_id" label="Warehouse">
-                                                        <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</option>
-                                                        <!--                                                        <option :value="false">No</option>-->
-                                                    </select-input>
-                                                </div>
-                                            </div>
+<!--                                            <div v-if="$page.props.user.roles.includes('admin')" class="grid grid-cols-3 gap-6">-->
+<!--                                                <div class="col-span-3 sm:col-span-2">-->
+<!--                                                    <select-input v-model="form.warehouse_id" :error="form.errors.warehouse_id" label="Warehouse">-->
+<!--                                                        <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</option>-->
+<!--                                                        &lt;!&ndash;                                                        <option :value="false">No</option>&ndash;&gt;-->
+<!--                                                    </select-input>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
                                             <div class="grid grid-cols-3 gap-6">
                                                 <div class="col-span-3 sm:col-span-2">
                                                     <select-input v-model="form.category_id" :error="form.errors.category_id" label="Category">
@@ -98,9 +98,9 @@
                                                 <div class="col-span-3 sm:col-span-2">
                                                     <text-input v-model="form.name" :error="form.errors.name"  label="Product Name"/>
                                                 </div>
-                                                <div class="col-span-3 sm:col-span-2">
-                                                    <text-input v-model.number="form.quantity" :error="form.errors.quantity"  label="Initial Stock"/>
-                                                </div>
+<!--                                                <div class="col-span-3 sm:col-span-2">-->
+<!--                                                    <text-input v-model.number="form.quantity" :error="form.errors.quantity"  label="Initial Stock"/>-->
+<!--                                                </div>-->
                                                 <div class="col-span-3 sm:col-span-2">
                                                     <text-input v-model.number="form.cost_price" :error="form.errors.cost_price" :prefix="'₦'"  label="Cost Price" :placeholder="'0.00'"/>
                                                     <!--                                                    <label for="cost_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cost price</label>-->

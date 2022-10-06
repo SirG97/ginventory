@@ -110,18 +110,18 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'warehouse_id' => 'required|numeric',
+//            'warehouse_id' => 'required|numeric',
             'category_id' => 'required|numeric',
             'name' => 'required|max:100',
             'cost_price' => 'required|numeric',
             'sales_price' => 'required|numeric',
             'tax' => 'required|numeric',
-            'quantity' => 'required|numeric',
+//            'quantity' => 'required|numeric',
             'description' => 'nullable',
             'weight' => 'nullable|numeric',
             'photo' => 'nullable'
         ]);
-       $product->update($request->only('warehouse_id', 'category_id', 'name', 'cost_price', 'sales_price', 'tax', 'quantity', 'weight', 'description'));
+       $product->update($request->only( 'category_id', 'name', 'cost_price', 'sales_price', 'tax',  'description'));
 
         return redirect()->route('products')->with('success', 'Product edited successfully');
     }
