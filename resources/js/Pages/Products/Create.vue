@@ -16,7 +16,6 @@
             SelectInput,
             FileInput,
             TextareaInput
-
         },
         props: {
             // filters: Object,

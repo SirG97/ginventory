@@ -21,6 +21,7 @@ class ProductController extends Controller
     {
         $products = Product::with('category')->get();
 
+
         return Inertia::render('Products/Index', ['products' => $products]);
     }
 
@@ -45,7 +46,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
-
         $request->validate([
             'warehouse_id' => 'required|numeric',
             'category_id' => 'required|numeric',
@@ -69,7 +69,7 @@ class ProductController extends Controller
             'sales_price' => $request->sales_price,
             'tax' => $request->tax,
             'description' => $request->description,
-            'weight' => $request->weight,
+            'weight' => $request->weight == null ? 1 : $request->weight,
             'photo' => $request->photo ? $request->photo->store('users', 'public') : null,
         ]);
 
