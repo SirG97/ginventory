@@ -101,7 +101,7 @@ class SalesController extends Controller
             });
 
         }catch(\Exception $e){
-            return back()->with('error', 'Order could not be created. Please try again');
+            return back()->with('error', 'Order could not be created. Please try again ' . $e->getMessage());
         }
 
         return back()->with(['success' => 'Order created successfully'], ['receipt' => $cart]);

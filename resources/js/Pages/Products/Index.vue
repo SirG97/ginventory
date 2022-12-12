@@ -87,7 +87,7 @@
                                     </td>
                                     <td class="px-2 py-3 border-b border-gray-200 bg-white text-md">{{ product.category.name }}</td>
                                     <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">₦{{ product.sales_price}}</td>
-                                    <!--                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.barcode}}</td>-->
+                                    <!--              <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.barcode}}</td>-->
                                     <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">{{ product.stock}}</td>
                                     <td class="px-5 py-3 border-b text-left">
                                         <a :href="'/product/' + product.id + '/edit'" class="mr-1 font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
